@@ -1,0 +1,22 @@
+{
+  "name": "expecto",
+  "version": "0.0.0",
+  "description": "expecto",
+  "main": "expecto.js",
+  "author": {
+    "name": "Stepan Stolyarov",
+    "email": "stepan.stolyarov@gmail.com"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "devDependencies": {
+    "mocha": "^1.20.1",
+    "chai-as-promised": "^4.1.1",
+    "chai": "^1.9.1"
+  },
+  "dependencies": {
+    "debug": "^1.0.2",
+    "bluebird": "^2.1.2"
+  }
+}
