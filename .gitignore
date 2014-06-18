@@ -221,3 +221,4 @@ node_modules
 
 *.js.map
 
+*.njsproj
