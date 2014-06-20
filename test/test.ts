@@ -89,7 +89,7 @@ describe('Timeout:', function () {
         var e: expecto.Expecto = null;
         beforeEach(function () { e = echo('a'); });
 
-        it.only('not expecting anything should timeout', function () {
+        it('not expecting anything should timeout', function () {
             return expect(e.timeout(100)).to.be.fulfilled;
         });
 

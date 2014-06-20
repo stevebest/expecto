@@ -87,7 +87,7 @@ describe('Timeout:', function () {
             e = echo('a');
         });
 
-        it.only('not expecting anything should timeout', function () {
+        it('not expecting anything should timeout', function () {
             return expect(e.timeout(100)).to.be.fulfilled;
         });
 
