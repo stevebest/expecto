@@ -1,4 +1,5 @@
 ﻿var expecto = require('../expecto');
+var promise = expecto.Promise;
 
 function echo(s) {
     return expecto.spawn('node', ['-e', 'console.log("' + s + '")']);
@@ -30,6 +31,9 @@ describe('expecto', function () {
             });
             it('has 2 arguments', function () {
                 expect(e.timeout).to.have.length(2);
+            });
+            it('returns a Promise', function () {
+                expect(e.timeout()).to.be.an.instanceOf(Promise);
             });
         });
     });
