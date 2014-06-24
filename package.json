@@ -7,6 +7,10 @@
     "name": "Stepan Stolyarov",
     "email": "stepan.stolyarov@gmail.com"
   },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/stevebest/expecto.git"
+  },
   "scripts": {
     "test": "mocha"
   },
