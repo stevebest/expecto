@@ -102,7 +102,7 @@ describe('Timeout:', function () {
         it('expecting /a/ should not timeout', function () {
             return Promise.all([
                 expect(e.expect(/a/)).to.be.fulfilled,
-                expect(e.timeout()).to.be.rejected
+                expect(e.timeout()).to.be.rejectedWith(/expectation matched/)
             ]);
         });
     });
