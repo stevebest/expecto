@@ -14,15 +14,13 @@ var expecto;
     expecto.Promise = Promise;
 
     function expect(pattern) {
-        var resolve, reject;
+        var resolve;
         var promise = new Promise(function () {
             resolve = arguments[0];
-            reject = arguments[1];
-        });
+        }).cancellable();
         return {
             pattern: pattern,
             resolve: resolve,
-            reject: reject,
             promise: promise
         };
     }
@@ -45,6 +43,7 @@ var expecto;
 
             this.reset();
         }
+
         Expecto.prototype.reset = function () {
             // TODO Clear eof expectation
             debug('reset');
@@ -67,7 +66,7 @@ var expecto;
                     });
 
                     this.expectations.splice(i, 1);
-                    this.reject(new Error('another expectation matched'));
+                    this.cancel(new Error('expectation matched'));
 
                     // throw out the matching part of input buffer
                     this.buffer = this.buffer.slice(this.buffer.indexOf(matches[0]) + matches[0].length);
@@ -80,19 +79,22 @@ var expecto;
             }
         };
 
-        /** Rejects all expectations */
-        Expecto.prototype.reject = function (err) {
+        /** Cancel all pending expectations */
+        Expecto.prototype.cancel = function (reason) {
             for (var i = 0; i < this.expectations.length; i++) {
-                debug('rejecting %s', this.expectations[i].pattern);
-                this.expectations[i].reject(err);
+                debug('cancelling %s', this.expectations[i].pattern);
+                this.expectations[i].promise.cancel(reason);
             }
 
             // Clear timeout
-            this.timeoutExpectation && this.timeoutExpectation.reject();
-            this.timeoutExpectation = null;
+            if (this.timeoutExpectation) {
+                this.timeoutExpectation.promise.cancel(reason);
+                clearTimeout(this.timeoutExpectation.timer);
+                this.timeoutExpectation = null;
+            }
         };
 
-        Expecto.prototype.expect = function (pattern) {
+        Expecto.prototype.expect = function (pattern, cb) {
             debug('expecting %s', pattern);
             var expectation = expect(pattern);
             this.expectations.push(expectation);
@@ -102,32 +104,31 @@ var expecto;
                 process.nextTick(this.match.bind(this));
             }
 
+            this.timeout();
+
             return expectation.promise;
         };
 
-        Expecto.prototype.timeout = function (ms) {
+        Expecto.prototype.timeout = function (ms, cb) {
             var _this = this;
             if (typeof ms === "undefined") { ms = 1000; }
-            var resolve, reject, timer, promise;
+            var timer, promise;
 
-            if (!this.timeoutExpectation) {
-                promise = new Promise(function () {
-                    resolve = arguments[0];
-                    reject = arguments[1];
+            if (this.timeoutExpectation) {
+                promise = this.timeoutExpectation.promise;
+            } else {
+                promise = new Promise(function (resolve) {
                     timer = setTimeout(function () {
-                        _this.reject(new Error('timed out'));
+                        _this.promiseExpectation = null;
+                        _this.cancel(new Error('timed out'));
+
                         resolve();
                     }, ms);
-                });
+                }).cancellable();
 
                 this.timeoutExpectation = {
                     timer: timer,
-                    promise: promise,
-                    resolve: resolve,
-                    reject: function () {
-                        clearTimeout(timer);
-                        reject(new Error('timer cleared'));
-                    }
+                    promise: promise
                 };
             }
 
@@ -151,7 +152,6 @@ var expecto;
 
         child.on('error', function (err) {
             debug('child process error %j', err);
-            //console.error(err.message);
         });
         child.on('exit', function () {
             debug('child process exited');
@@ -169,4 +169,3 @@ var expecto;
 })(expecto || (expecto = {}));
 
 module.exports = expecto;
-//# sourceMappingURL=expecto.js.map
