@@ -37,7 +37,6 @@ var expecto;
             this.input = options.input;
             this.output = options.output;
             this.encoding = options.encoding || 'utf8';
-            this.child = options.child;
 
             this.input.on('data', function (data) {
                 _this.buffer += data.toString(_this.encoding);
@@ -163,8 +162,7 @@ var expecto;
 
         return new Expecto({
             input: child.stdout,
-            output: child.stdin,
-            child: child
+            output: child.stdin
         });
     }
     expecto.spawn = spawn;
