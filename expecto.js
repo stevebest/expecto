@@ -9,6 +9,10 @@ function expecto(options) {
 
 var expecto;
 (function (expecto) {
+
+    // Re-expord bluebird Promise object
+    expecto.Promise = Promise;
+
     function expect(pattern) {
         var resolve, reject;
         var promise = new Promise(function () {
