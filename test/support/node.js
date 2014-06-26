@@ -10,6 +10,8 @@ chai.should();
 chai.use(chaiAsPromised);
 chai.use(sinonChai);
 
+global.nop = function $nop() {};
+
 global.chaiAsPromised = chaiAsPromised;
 global.expect = chai.expect;
 global.AssertionError = chai.AssertionError;

@@ -107,3 +107,24 @@ describe('Timeout:', function () {
         });
     });
 });
+
+describe('Loops:', function () {
+    describe('on input "aardvark zoo"', function () {
+        var e = echo('aardvark zoo');
+
+        it('/a/ should match three times', function () {
+            var matchA = sinon.spy();
+            return new Promise(function (fulfill, reject) {
+                function $loop() {
+                    e.timeout(100).then(reject, nop);
+                    e.expect(/a/).then(matchA).then($loop, function () {});
+                    e.expect(/z/).then(fulfill, function () {});
+                };
+                $loop();
+            }).then(function () {
+                return expect(matchA).to.have.been.calledThrice;
+            });
+        });
+    });
+
+});
