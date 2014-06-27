@@ -111,7 +111,7 @@ var expecto;
 
         Expecto.prototype.timeout = function (ms, cb) {
             var _this = this;
-            if (typeof ms === "undefined") { ms = 1000; }
+            if (typeof ms === "undefined") { ms = 10000; }
             var timer, promise;
 
             if (this.timeoutExpectation) {
