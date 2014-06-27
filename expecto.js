@@ -143,9 +143,9 @@ var expecto;
     })();
     expecto.Expecto = Expecto;
 
-    function spawn(command, args) {
-        debug('spawning %s %j', command, args);
-        var child = child_process.spawn(command, args);
+    function spawn(command, args, options) {
+        debug('spawning %s %j %j', command, args, options);
+        var child = child_process.spawn(command, args, options);
         debug('spawned pid %j', child.pid);
         debug('stdout %j', child.stdout.readable);
         debug('stdin %j', child.stdin.writable);
