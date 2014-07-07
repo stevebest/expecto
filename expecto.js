@@ -101,7 +101,7 @@ var expecto;
 
             if (!this.matchPending) {
                 this.matchPending = true;
-                process.nextTick(this.match.bind(this));
+                setImmediate(this.match.bind(this));
             }
 
             this.timeout();
